@@ -1,0 +1,337 @@
+  .App {
+  text-align: center;
+  display: flex;
+  width: 100vw;
+  height:100vh;
+} 
+
+/* leftContent */
+ .Leftbar11left{
+  width:15vw;
+  text-align: left;
+  height:"100vh";
+cursor: pointer;
+/* height: 100vh; */
+}
+.Leftbar11leftContent{
+text-decoration: none;
+height: "100vh";
+cursor: pointer;
+}
+
+.LeftBar11hasAllFoldersName{
+  margin-top: 50px;
+  cursor: pointer;
+  background-color: rgb(247, 232, 232);
+}
+#mySidebar{
+  width: 20%;
+  background-color:#818181;
+}
+
+.Leftbar11DisplayNameh3tag{
+  display: none;
+}
+.Leftbar11DisplayNameh4tag{
+  display: none;
+}
+/* rightContent */
+ .right{
+overflow-x: auto;
+width: 85vw;
+padding-right:px;
+}
+.rightContent{
+
+  cursor: pointer;
+}
+.RightBar22searchBar{
+  height:"50px";
+  width:"300px";
+  padding:"20px"
+}
+.size{
+  font-size:100px;
+  padding: 20px;
+  cursor: pointer;
+}
+.dropdown{
+  width: "6px";
+  cursor: pointer;
+}  
+.RightBar22dropdown{
+  margin: 20px;
+  cursor: pointer;
+} 
+.Rightbar22QueryImages{
+  width:"200px";
+  height:"200px" ;
+  margin:"10px";
+  border-radius:"15px"
+}
+
+/* Modal */
+
+.modalInputs input{
+  margin:20px;
+  width:300px;
+  height:50px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.create{
+margin: 20px;
+padding:10px;
+border-radius: 120px;
+cursor: pointer;
+} 
+
+/* folderDiv */
+.folderDiv{
+  right:0;
+  width: 10vw;
+  cursor: pointer;
+}
+.folderDiv33size{
+  font-size:100px;
+  cursor: pointer;
+}
+
+
+/* navbar */
+
+.navbar span {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  cursor: pointer;
+}
+
+.navbar{
+  width: 100%;
+  cursor: pointer;
+
+}
+
+.displayData{
+  cursor: pointer;
+}
+
+.DisplayName_23_hoverAdded:hover{
+  /* background-color:rgb(141, 141, 134); */
+  cursor: pointer;
+}
+.DisplayNameh4_23_hoverAdded:hover{
+    background-color:rgb(141, 141, 134);
+    cursor: pointer;
+}
+
+
+body {
+  font-family: "Lato", sans-serif;
+}
+
+.sidebar {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidebar a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidebar a:hover {
+  color: #f1f1f1;
+}
+
+.sidebar .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+
+
+/* //.sidebar */
+.openbtn {
+  font-size: 20px;
+  cursor: pointer;
+  /* background-color: #111; */
+  /* color: white; */
+  padding: 10px 15px;
+  border: none;
+}
+
+/* .openbtn:hover {
+  /* background-color: #444; */
+
+
+#main {
+  transition: margin-left .5s;
+  padding: 16px;
+}
+
+/* SearchBar */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.container {
+
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border: 1px solid;
+  border-radius: 10px;
+}
+.container input {
+  padding: 10px 20px;
+  background: white;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+}
+
+
+
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidebar {padding-top: 15px;}
+  .sidebar a {font-size: 18px;}
+}
+
+
+
+
+
+
+
+
+
+/* # Tablet */
+
+
+
+/* # Desktop */
+
+@media screen and (min-width:900px){
+  .size{
+    font-size:100px;
+ 
+    cursor: pointer;
+  }
+  .RightBar22searchBar{
+    height:"50px";
+    width:"130px";
+
+  }
+  .folderDiv33size{
+    font-size:100px;
+    margin-left: "20px";
+    cursor: pointer;
+  }
+  .Rightbar22QueryImages{
+    width:"140px";
+    height:"140px" ;
+    margin:"10px";
+    border-radius:"15px"
+  }
+ 
+}
+
+@media screen and (min-width:321px) and (max-width:768px){
+  .size{
+    font-size:80px;
+ 
+    cursor: pointer;
+  }
+  /* .RightBar22searchBar{
+    height:"50px";
+    width:"100px";
+
+  } */
+  .folderDiv33size{
+    font-size:80px;
+    margin-left: "20px";
+    cursor: pointer;
+  }
+  .Rightbar22QueryImages{
+    width:"150px";
+    height:"150px";
+    margin:"20px";
+    border-radius:"15px"
+  }
+  /* .RightBar22searchBar{
+    height:"50px";
+    width:"130px";
+   
+  } */
+}
+
+
+@media screen and (max-width:320px) {
+   
+  .left{
+    width: 20%;
+  }
+
+  .size{
+    font-size:70px;
+
+    cursor: pointer;
+  }
+  #mySidebar{
+    width: 100%;
+  }
+  .RightBar22searchBar{
+    height:"50px";
+    width:"150px";
+   
+  }
+  .folderDiv33size{
+    font-size:70px;
+    margin-left: "20px";
+    cursor: pointer;
+  }
+  .navbar{
+    display: flex;
+    flex-direction: column;
+  }
+  .modalInputs input{
+    margin:20px;
+    width:150px;
+    height:50px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .modal {
+    width: 500px;
+    height: 200px;
+  }
+  .Rightbar22QueryImages{
+    width:"100px";
+    height:"100px" ;
+    margin:"20px";
+    border-radius:"15px"
+  }
+}
