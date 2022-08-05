@@ -1,102 +1,115 @@
-  .App {
+.App {
   text-align: center;
   display: flex;
   width: 100vw;
-  height:100vh;
-} 
+  height: 100vh;
+}
 
 /* leftContent */
- .Leftbar11left{
-  width:15vw;
+.Leftbar11left {
+  width: 15vw;
   text-align: left;
-  height:"100vh";
-cursor: pointer;
-/* height: 100vh; */
+  height: "100vh";
+  cursor: pointer;
+  /* height: 100vh; */
 }
-.Leftbar11leftContent{
-text-decoration: none;
-height: "100vh";
-cursor: pointer;
+.Leftbar11leftContent {
+  text-decoration: none;
+  height: "100vh";
+  cursor: pointer;
 }
 
-.LeftBar11hasAllFoldersName{
+.LeftBar11hasAllFoldersName {
   margin-top: 50px;
   cursor: pointer;
   background-color: rgb(247, 232, 232);
 }
-#mySidebar{
+#mySidebar {
   width: 20%;
-  background-color:#818181;
+  background-color: #818181;
+
 }
 
-.Leftbar11DisplayNameh3tag{
+.Leftbar11DisplayNameh3tag {
   display: none;
 }
-.Leftbar11DisplayNameh4tag{
+.Leftbar11DisplayNameh4tag {
   display: none;
 }
 /* rightContent */
- .right{
-overflow-x: auto;
-width: 85vw;
-padding-right:px;
+.right {
+  overflow-x: auto;
+  width: 85vw;
+  padding:"50px";
+  /* height:"200px" */
 }
-.rightContent{
 
-  cursor: pointer;
+.rightBar22bread:hover {
+  background-color: #f2f2f2;
 }
-.RightBar22searchBar{
-  height:"50px";
-  width:"300px";
-  padding:"20px"
+
+.RightBar22searchBar {
+  height: "50px";
+  width: "300px";
+  padding: "20px";
 }
-.size{
-  font-size:100px;
+.size {
+  font-size: 100px;
   padding: 20px;
   cursor: pointer;
 }
-.dropdown{
+.size:hover {
+  background-color: "grey";
+}
+.dropdown {
   width: "6px";
   cursor: pointer;
-}  
-.RightBar22dropdown{
+}
+.RightBar22dropdown {
   margin: 20px;
   cursor: pointer;
-} 
-.Rightbar22QueryImages{
-  width:"200px";
-  height:"200px" ;
-  margin:"10px";
-  border-radius:"15px"
+}
+.Rightbar22QueryImages {
+  width: "200px";
+  height: "200px";
+  margin: "10px";
+  border-radius: "15px";
+}
+.rigthBar22folder:hover {
+  background-color: "grey";
 }
 
 /* Modal */
 
-.modalInputs input{
-  margin:20px;
-  width:300px;
-  height:50px;
+.modalInputs input {
+  margin: 20px;
+  width: 300px;
+  height: 50px;
   border-radius: 5px;
   cursor: pointer;
 }
-.create{
-margin: 20px;
-padding:10px;
-border-radius: 120px;
-cursor: pointer;
-} 
+.create {
+  margin: 20px;
+  padding: 10px;
+  border-radius: 120px;
+  cursor: pointer;
+}
+
+.modal-backdrop.fade.in {
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  }
 
 /* folderDiv */
-.folderDiv{
-  right:0;
+.folderDiv {
+  right: 0;
   width: 10vw;
   cursor: pointer;
 }
-.folderDiv33size{
-  font-size:100px;
+.folderDiv33size {
+  font-size: 100px;
   cursor: pointer;
 }
-
 
 /* navbar */
 
@@ -107,25 +120,23 @@ cursor: pointer;
   cursor: pointer;
 }
 
-.navbar{
+.navbar {
   width: 100%;
   cursor: pointer;
-
 }
 
-.displayData{
+.displayData {
   cursor: pointer;
 }
 
-.DisplayName_23_hoverAdded:hover{
+.DisplayName_23_hoverAdded:hover {
   /* background-color:rgb(141, 141, 134); */
   cursor: pointer;
 }
-.DisplayNameh4_23_hoverAdded:hover{
-    background-color:rgb(141, 141, 134);
-    cursor: pointer;
+.DisplayNameh4_23_hoverAdded:hover {
+  background-color: rgb(141, 141, 134);
+  cursor: pointer;
 }
-
 
 body {
   font-family: "Lato", sans-serif;
@@ -165,8 +176,6 @@ body {
   margin-left: 50px;
 }
 
-
-
 /* //.sidebar */
 .openbtn {
   font-size: 20px;
@@ -180,9 +189,8 @@ body {
 /* .openbtn:hover {
   /* background-color: #444; */
 
-
 #main {
-  transition: margin-left .5s;
+  transition: margin-left 0.5s;
   padding: 16px;
 }
 
@@ -194,7 +202,6 @@ body {
   box-sizing: border-box;
 }
 .container {
-
   width: 100%;
   display: flex;
   justify-content: center;
@@ -213,125 +220,110 @@ body {
 
 
 
-
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
 @media screen and (max-height: 450px) {
-  .sidebar {padding-top: 15px;}
-  .sidebar a {font-size: 18px;}
+  .sidebar {
+    padding-top: 15px;
+  }
+  .sidebar a {
+    font-size: 18px;
+  }
 }
-
-
-
-
-
-
-
-
 
 /* # Tablet */
 
-
-
 /* # Desktop */
 
-@media screen and (min-width:900px){
-  .size{
-    font-size:100px;
- 
+@media screen and (min-width: 900px) {
+  .size {
+    font-size: 100px;
+
     cursor: pointer;
   }
-  .RightBar22searchBar{
-    height:"50px";
-    width:"130px";
-
+  .RightBar22searchBar {
+    height: "50px";
+    width: "130px";
   }
-  .folderDiv33size{
-    font-size:100px;
+  .folderDiv33size {
+    font-size: 100px;
     margin-left: "20px";
     cursor: pointer;
   }
-  .Rightbar22QueryImages{
-    width:"140px";
-    height:"140px" ;
-    margin:"10px";
-    border-radius:"15px"
+  .Rightbar22QueryImages {
+    width: "140px";
+    height: "140px";
+    margin: "10px";
+    border-radius: "15px";
   }
- 
+
 }
 
-@media screen and (min-width:321px) and (max-width:768px){
-  .size{
-    font-size:80px;
- 
+@media screen and (min-width: 321px) and (max-width: 768px) {
+  .size {
+    font-size: 80px;
+
     cursor: pointer;
   }
-  /* .RightBar22searchBar{
-    height:"50px";
-    width:"100px";
-
-  } */
-  .folderDiv33size{
-    font-size:80px;
+  .folderDiv33size {
+    font-size: 80px;
     margin-left: "20px";
     cursor: pointer;
   }
-  .Rightbar22QueryImages{
-    width:"150px";
-    height:"150px";
-    margin:"20px";
-    border-radius:"15px"
+  .Rightbar22QueryImages {
+    width: "150px";
+    height: "150px";
+    margin: "20px";
+    border-radius: "15px";
   }
-  /* .RightBar22searchBar{
-    height:"50px";
-    width:"130px";
-   
-  } */
+
 }
 
-
-@media screen and (max-width:320px) {
-   
-  .left{
+@media screen and (max-width: 320px) {
+  .left {
     width: 20%;
   }
 
-  .size{
-    font-size:70px;
+  .size {
+    font-size: 70px;
 
     cursor: pointer;
   }
-  #mySidebar{
+  #mySidebar {
     width: 100%;
+    z-index: 2;
   }
-  .RightBar22searchBar{
-    height:"50px";
-    width:"150px";
-   
+  .RightBar22searchBar {
+    height: "50px";
+    width: "150px";
   }
-  .folderDiv33size{
-    font-size:70px;
+  .folderDiv33size {
+    font-size: 70px;
     margin-left: "20px";
     cursor: pointer;
   }
-  .navbar{
+  .navbar {
     display: flex;
     flex-direction: column;
   }
-  .modalInputs input{
-    margin:20px;
-    width:150px;
-    height:50px;
+  /* .modalInputs input {
+    margin: 20px;
+    width: 150px;
+    height: 50px;
     border-radius: 5px;
     cursor: pointer;
   }
   .modal {
     width: 500px;
     height: 200px;
+  } */
+  .Rightbar22QueryImages {
+    width: "100px";
+    height: "100px";
+    margin: "20px";
+    border-radius: "15px";
   }
-  .Rightbar22QueryImages{
-    width:"100px";
-    height:"100px" ;
-    margin:"20px";
-    border-radius:"15px"
+  #mySidebar{
+    width: "200px";
   }
+
 }

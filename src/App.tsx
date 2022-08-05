@@ -1,350 +1,378 @@
+import React, { useEffect } from "react";
+import { useState, ChangeEvent } from "react";
+import axios from "axios";
 
-  import React, { useEffect } from 'react';
-import {useState,ChangeEvent} from "react";
-import axios from 'axios';
+import { structure } from "./interfaces/interface";
+import { useDispatch, useSelector } from "react-redux";
 
-import {structure} from "./interfaces/interface"
-import {DummmyFileStructure} from "./utils/DummyFileStructure"
-import {useDispatch, useSelector } from 'react-redux';
+import Leftbar from "../src/components/LeftBar/LeftBar";
+import Rightbar from "../src/components/RightBar/RightBar";
+import { bindActionCreators } from "redux";
+import { actionCreators } from "./exportFile";
+import { RootState } from "../src/reducers/index";
 
-import Leftbar from './components/LeftBar';
-import Rightbar from './components/RightBar';
-import { bindActionCreators } from 'redux';
-import { actionCreators } from "./exportFile"
-import { RootState } from '../src/reducers/index';
 
-import './App.css';
-// import DisplayImage from './components/DisplayImages';
-
+import "./App.css";
 
 function App() {
-
-  let url="";
-  let pathValue="";
+  let url = "";
+  let pathValue = "";
 
   const dispatch = useDispatch();
 
-const rootList = useSelector((state: RootState) => state.rootList)
-const list = useSelector((state: RootState) => state.list)
+  const rootList = useSelector((state: RootState) => state.rootList);
+  const list = useSelector((state: RootState) => state.list);
 
-
-  const { AddRootList,AddList} = bindActionCreators(actionCreators, dispatch)
-  const [type,setType]=useState<string>("");
-  const [name,setName]=useState<string>("");
-  const [creator,setCreator]=useState<string>("");
-  const [size,setSize]=useState<number>(0);
-  // const [list,setList]=useState<structure[]>(DummmyFileStructure);
-  // const [rootList,setRootList]=useState<structure[]>(DummmyFileStructure);
-  const [sideBarList,setSidebarList]=useState<structure[]>([]);
-  let   [currentList,setCurrentList]=useState<structure[]>([]);
-  const [result,setResult]=useState<any>({});
-  const [queryValue,setQueryValue]=useState<string>("");
-  const [path,setPath]=useState<string>("root");
-
-
+  const { AddRootList, AddList } = bindActionCreators(actionCreators, dispatch);
+  const [type, setType] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [creator, setCreator] = useState<string>("");
+  const [size, setSize] = useState<number>(0);
+  const [sideBarList, setSidebarList] = useState<structure[]>([]);
+  let [currentList, setCurrentList] = useState<structure[]>([]);
+  const [result, setResult] = useState<any>({});
+  const [queryValue, setQueryValue] = useState<string>("");
+  const [path, setPath] = useState<string>("root");
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
+  const [pathArray, setPathArray] = useState<string[]>(["root"]);
+  const [toggleFolder,setToggleFolder]=useState<boolean>(false);
 
   const buttonHandler = () => {
+    let id = new Date().getTime() * Math.random() * 100000;
+    const newList = {
+      id: id,
+      type: type,
+      name: name,
+      creator: creator,
+      size: size,
+      parent: path,
+    };
+    console.log(newList, " newList at 38");
+    AddList([newList]);
+    if (newList.parent == "root") {
+      // setRootList([...rootList,newList])
+      console.log(rootList, rootList);
 
-  let id= (new Date().getTime() * Math.random() * 100000)
-    const newList= { id:id,type: type,name: name,creator:creator,size: size,parent:path};
-    console.log(newList," newList at 38");
+      AddRootList([newList]);
 
-        // setList([...list,newList]);
-AddList([newList]);
-        if(newList.parent=='root'){
-          // setRootList([...rootList,newList])
-          console.log(rootList,rootList);
-          
-          AddRootList([newList]);
-
-          console.log(rootList);
-          sideBar([newList]);
+      console.log(rootList);
+      sideBar([newList]);
+    }
+    const _list = [...list, newList];
+    if (path != "root") {
+      let listToberender = _list.filter((singleList) => {
+        if (path == singleList.parent) {
+          return singleList;
         }
-        const _list=[...list,newList];
-        if(path!='root'){
-          let listToberender=_list.filter((singleList)=>{
-
-            if(path==singleList.parent){                
-              return singleList
-            };
-          }) 
-          updateCurrentList(pathValue)
-          if(listToberender!=null){
-            setCurrentList(listToberender);
-
-            }else{
-              setCurrentList([]);
-            }
-        }
-       
-        setType(type)
-        setName("");
-        setCreator("");
-        setSize(0);  
-
-
+      });
+      updateCurrentList(pathValue);
+      if (listToberender != null) {
+        setCurrentList(listToberender);
+      } else {
+        setCurrentList([]);
+      }
+    }
+    setToggleFolder(!toggleFolder)
+    setType(type);
+    setName("");
+    setCreator("");
+    setSize(0);
   };
 
-  useEffect(()=>{
-     url="https://api.unsplash.com/search/photos?&per_page=100&page=100&query="+queryValue+"&client_id=nkIb2TlHTpFd4IRQWTgFMF9cFwA60eemmLpwZ7H-cYU"  
+  useEffect(() => {
+    url =
+      "https://api.unsplash.com/search/photos?&per_page=100&page=100&query=" +
+      queryValue +
+      "&client_id=nkIb2TlHTpFd4IRQWTgFMF9cFwA60eemmLpwZ7H-cYU";
 
-    console.log(list,"list")
-    console.log(path,"path")
-    console.log(currentList,"currentList");
-    console.log(rootList,'rootList');
+    console.log(list, "list");
+    console.log(path, "path");
+    console.log(currentList, "currentList");
+    console.log(rootList, "rootList");
+    console.log(pathArray);
+    console.log(result,"results array");
     
-   
+
     console.log("------------------------");
-    
+
     //console.log(result,"resultsArray");
     // console.log(queryValue,"queryvalue");
-    
-  },[list,path,result,queryValue])
+  }, [list, path, result, queryValue,toggleFolder]);
 
-  useEffect(()=>{
-    sideBar([])
+  useEffect(() => {
+    sideBar([]);
     console.log("display it");
     console.log("------------------------");
     return () => {
       console.log("unmounted");
     };
-  
-  },[])
-  
+  }, []);
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     if (event.target.name === "name") {
       setName(event.target.value);
-    } 
-    else if(event.target.name=="creator"){
+    } else if (event.target.name == "creator") {
       setCreator(event.target.value);
-    } 
-    else if(event.target.name="size"){
-      setSize(Number(event.target.value))
+    } else if ((event.target.name = "size")) {
+      setSize(Number(event.target.value));
     }
-  }
+  };
 
-  const settingPathValue=(val:string,type:string)=>{   
-     console.log("inside settingpath at 124");
-     
-    let newPath=[];
-      if(type=="file"){
-        setQueryValue(val);
+  const settingPathValue = (val: string, type: string) => {
+    console.log("inside settingpath at 124");
 
-            if(queryValue.length>1){
-              pathValue=path+"/"+val
-              newPath = path.split("/");
-                if(newPath[newPath.length-1]!=val){
-                  pathValue=path+"/"+val
-                  setPath(pathValue)
-                  handleSubmit()
-                    }
-                else{
-                      console.log("'same value");  
-                    }
+    let newPath = [];
+    if (type == "file") {
+      setQueryValue(val);
+
+      if (queryValue.length > 1) {
+        pathValue = path + "/" + val;
+        newPath = path.split("/");
+        if (newPath[newPath.length - 1] != val) {
+          pathValue = path + "/" + val;
+          localStorage.setItem("path", pathValue);
+          if (pathArray.length < 1) {
+            setPathArray(["root"]);
+          } else {
+            if (pathArray[pathArray.length - 1] != val) {
+              setPathArray([...pathArray, val]);
             }
-            if(path!="root"){
-              let listToberender=list.filter((singleList)=>{
-                                  
-                if(pathValue==singleList.parent){                     
-                  return singleList
-                };
-              }) 
-              console.log(currentList,"currentList at 118");
-              
-              updateCurrentList(pathValue)
-          if(listToberender!=null){
-            setCurrentList(listToberender);
-
-            }else{
-              setCurrentList([]);
-            }
-          console.log(currentList,"currentList at 122");
+          }
+          setPath(pathValue);
+          handleSubmit();
+        } else {
+          console.log("'same value");
         }
       }
-      else{
-
-        setQueryValue(val);
-
-         let newPath=[];
-          if(queryValue.length>1){
-            newPath = path.split("/");
-                if(newPath[newPath.length-1]!=val){
-                      pathValue=path+"/"+val
-                      setPath(path+"/"+val)
-                    
-                }
-                else{
-                  console.log("'same value");
-                  
-                }
-          
+      if (path != "root") {
+        let listToberender = list.filter((singleList) => {
+          if (pathValue == singleList.parent) {
+            return singleList;
           }
-          if(path!="root"){
-            let listToberender=list.filter((singleList)=>{
-                
-              if(path==singleList.parent){  
-                  
-                return singleList
-              };
-            }) 
-            updateCurrentList(pathValue)
-            if(listToberender!=null){
-            setCurrentList(listToberender);
+        });
+        console.log(currentList, "currentList at 118");
 
-            }else{
-              setCurrentList([]);
+        updateCurrentList(pathValue);
+        if (pathArray.length < 1) {
+          setPathArray(["root"]);
+        } else {
+          if (pathArray[pathArray.length - 1] != val) {
+            setPathArray([...pathArray, val]);
+          }
+        }
+        console.log(pathArray, "pathArray at 155");
+
+        if (listToberender != null) {
+          setCurrentList(listToberender);
+        } else {
+          setCurrentList([]);
+        }
+        console.log(currentList, "currentList at 122");
+      }
+    } else {
+      setQueryValue(val);
+
+      let newPath = [];
+      if (queryValue.length > 1) {
+        newPath = path.split("/");
+        if (newPath[newPath.length - 1] != val) {
+          pathValue = path + "/" + val;
+          localStorage.setItem("path", pathValue);
+          if (pathArray.length < 1) {
+            setPathArray(["root"]);
+          } else {
+            if (pathArray[pathArray.length - 1] != val) {
+              setPathArray([...pathArray, val]);
             }
           }
-      }   
-  }
+          setPath(path + "/" + val);
+        } else {
+          console.log("'same value");
+        }
+      }
+      if (path != "root") {
+        let listToberender = list.filter((singleList) => {
+          if (path == singleList.parent) {
+            return singleList;
+          }
+        });
+        updateCurrentList(pathValue);
+        if (pathArray.length < 1) {
+          setPathArray(["root"]);
+        } else {
+          if (pathArray[pathArray.length - 1] != val) {
+            setPathArray([...pathArray, val]);
+          }
+        }
+        console.log(pathArray, "pathARRAY AT 199");
 
-  const settingLeftBarPathValue=(name:string,type:string,parent?:string)=>{   
+        if (listToberender != null) {
+          setCurrentList(listToberender);
+        } else {
+          setCurrentList([]);
+        }
+      }
+    }
+    setType(type);
+  };
+
+  const settingLeftBarPathValue = (
+    name: string,
+    type: string,
+    parent?: string
+  ) => {
     console.log("inside settingpath at 124");
-    
-   let newPath=[];
-     if(type=="file"){
-       setQueryValue(name);
 
-           if(queryValue.length>1){
-             pathValue=parent+"/"+name
-             newPath = pathValue.split("/");
-               if(newPath[newPath.length-1]!=name){
-                 pathValue=parent+"/"+name
-                 setPath(pathValue)
-                 handleSubmit()
-                   }
-               else{
-                     console.log("'same value");
-                     
-                   }
-           }
-           if(pathValue!="root"){
-             let listToberender=list.filter((singleList)=>{
-                                 
-               if(pathValue==singleList.parent){                     
-                 return singleList
-               };
-             }) 
-             console.log(currentList,"currentList at 118");
-             
-             updateCurrentList(pathValue)
-         if(listToberender!=null){
+    let newPath = [];
+    if (type == "file") {
+      setQueryValue(name);
 
-           setCurrentList(listToberender);
+      if (queryValue.length > 1) {
+        pathValue = parent + "/" + name;
+        newPath = pathValue.split("/");
+        if (newPath[newPath.length - 1] != name) {
+          pathValue = parent + "/" + name;
+          localStorage.setItem("path", pathValue);
+          if (pathArray.length < 1) {
+            setPathArray(["root"]);
+          } else {
+            if (pathArray[pathArray.length - 1] != name) {
+              setPathArray([...pathArray, name]);
+            }
+          }
+          setPath(pathValue);
+          handleSubmit();
+        } else {
+          console.log("'same value");
+        }
+      }
+      if (pathValue != "root") {
+        let listToberender = list.filter((singleList) => {
+          if (pathValue == singleList.parent) {
+            return singleList;
+          }
+        });
+        console.log(currentList, "currentList at 118");
 
-           }else{
-             setCurrentList([]);
-           }
-         console.log(currentList,"currentList at 122");
-       }
-     }
-     else{
+        updateCurrentList(pathValue);
+        if (listToberender != null) {
+          setCurrentList(listToberender);
+        } else {
+          setCurrentList([]);
+        }
+        console.log(currentList, "currentList at 122");
+      }
+    } else {
+      setQueryValue(name);
 
-       setQueryValue(name);
+      let newPath = [];
+      if (queryValue.length > 1) {
+        newPath = pathValue.split("/");
+        if (newPath[newPath.length - 1] != name) {
+          pathValue = parent + "/" + name;
+          localStorage.setItem("path", pathValue + "/" + name);
+          setPath(pathValue + "/" + name);
+        } else {
+          console.log("'same value");
+        }
+      }
+      if (path != "root") {
+        let listToberender = list.filter((singleList) => {
+          if (pathValue == singleList.parent) {
+            return singleList;
+          }
+        });
+        updateCurrentList(pathValue);
+        if (listToberender != null) {
+          setCurrentList(listToberender);
+        } else {
+          setCurrentList([]);
+        }
+      }
+    }
+  };
 
-        let newPath=[];
-         if(queryValue.length>1){
-           newPath = pathValue.split("/");
-               if(newPath[newPath.length-1]!=name){
-                     pathValue=parent+"/"+name
-                     setPath(pathValue+"/"+name)
-                   
-               }
-               else{
-                 console.log("'same value");
-                 
-               }
-         
-         }
-         if(path!="root"){
-           let listToberender=list.filter((singleList)=>{
-               
-             if(pathValue==singleList.parent){  
-                 
-               return singleList
-             };
-           }) 
-           updateCurrentList(pathValue)
-           if(listToberender!=null){
-           setCurrentList(listToberender);
-
-           }else{
-             setCurrentList([]);
-           }
-         }
-     }   
- }
-
-  function handleSubmit(){
-
-    axios.get(url)
-    .then((response)=>{
-       setResult(response.data.results);
-       console.log(result);
-    })
-    // .catch((err)=>{
-      
-    // })
+  function handleSubmit() {
+    axios
+      .get(url)
+      .then((response: any) => {
+        setLoading(false);
+        setResult(response.data.results);
+        console.log(result);
+      })
+      .catch((err) => {
+        console.log(err.message);
+        setLoading(true);
+        setError(err.message);
+      });
   }
 
-  const updatePath=()=>{
-   
+  const updatePath = () => {
     let newPath = path.split("/");
     newPath.splice(newPath.length - 1, 1);
 
-      if(newPath.length==0){
-        newPath=["root"]
-        setResult({});
-      }
-    let validPath=newPath.join('/')
+    if (newPath.length == 0) {
+      newPath = ["root"];
+      setResult({});
+    }
+    let validPath = newPath.join("/");
 
-    
-    updateCurrentList(validPath)
+    updateCurrentList(validPath);
+    localStorage.setItem("path", pathValue);
     setPath(validPath);
+    pathArray.pop();
+    if (pathArray.length == 0) {
+      setPathArray(["root"]);
+    } else {
+      setPathArray(pathArray);
+    }
+    console.log(pathArray, "pathArray at 315");
+
     setResult([]);
     setQueryValue("");
-  }
+    setError("");
+  };
 
-  const updateCurrentList=(validPath:string)=>{
-    
-    console.log(currentList,"currentList at 204");
-     let listToberender=list.filter((singleList)=>{
-        if(validPath==singleList.parent){           
-          return singleList
-        };
-    }) 
-    if(listToberender!==null){
-    setCurrentList(listToberender);
-    }else{
+  const updateCurrentList = (validPath: string) => {
+    console.log(currentList, "currentList at 204");
+    let listToberender = list.filter((singleList) => {
+      if (validPath == singleList.parent) {
+        return singleList;
+      }
+    });
+    if (listToberender !== null) {
+      setCurrentList(listToberender);
+    } else {
       setCurrentList([]);
     }
-    console.log(currentList,"currentList at 212");
-  }
+    console.log(currentList, "currentList at 212");
+  };
 
-  const sideBar=(newList:structure[])=>{
+  const sideBar = (newList: structure[]) => {
+    let leftContent = [];
 
-  let leftContent=[];
+    leftContent = list.filter((singleList) => {
+      if (singleList.parent == "root") {
+        leftContent.push(singleList);
+      }
+      return singleList;
+    });
 
-      leftContent=list.filter((singleList)=>{
-        
-          if(singleList.parent=='root'){
-            leftContent.push(singleList);
-          }
-        return singleList
-      })
-      
-      let newArr=[...leftContent,newList];    
-      setSidebarList([...leftContent,...newList]);
-  }
+    setSidebarList([...leftContent, ...newList]);
+  };
 
   return (
     <div className="App">
-
-        <Leftbar  
-                sideBarList={sideBarList} settingLeftBarPathValue={settingLeftBarPathValue}/>
-        <Rightbar 
+      <Leftbar
+        sideBarList={sideBarList}
+        settingLeftBarPathValue={settingLeftBarPathValue}
+      />
+      <Rightbar
         settingPathValue={settingPathValue}
         updatePath={updatePath}
+        error={error}
+        loading={loading}
         currentList={currentList}
         path={path}
         result={result}
@@ -356,77 +384,42 @@ AddList([newList]);
         creator={creator}
         size={size}
         setCurrentList={setCurrentList}
+        pathArray={pathArray}
+        setPath={setPath}
+        setPathArray={setPathArray}
         type={type}
-        updateCurrentList={updateCurrentList}             />
-         
-         
+        updateCurrentList={updateCurrentList}
+        queryValue={queryValue}
+      />
     </div>
   );
 }
 export default App;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // let currentList=[];
 //     useEffect(()=>{
-      
+
 //      currentList list.filter((ls)=>{
-      
+
 //         ls.directory
 
 //       })
 
-      
 //     },[path])
 
-  
-  // const searchImage=(query:string)=>{
-  //   console.log("queryvalueIsNull");
+// const searchImage=(query:string)=>{
+//   console.log("queryvalueIsNull");
 
-  //     setQueryValue(query);
-  //     setTimeout(()=>{  handleSubmit()},2000)
-    
-  // }
+//     setQueryValue(query);
+//     setTimeout(()=>{  handleSubmit()},2000)
 
+// }
 
-    // const handlePhotoname=(event:ChangeEvent<HTMLInputElement>)=>{
-  //      setQueryValue(event.target.value);
-  // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// const handlePhotoname=(event:ChangeEvent<HTMLInputElement>)=>{
+//      setQueryValue(event.target.value);
+// }
 
 //before implementing Redux
-
-
 
 //   import React, { useEffect } from 'react';
 // import {useState,ChangeEvent} from "react";
@@ -444,7 +437,6 @@ export default App;
 
 // import './App.css';
 
-
 // function App() {
 
 //   let url="";
@@ -454,7 +446,6 @@ export default App;
 
 // const rootList = useSelector((state: RootState) => state.rootList)
 // const list = useSelector((state: RootState) => state.rootList)
-
 
 //   const state = useSelector((state: RootState) => state.bank)
 //   const { AddRootList} = bindActionCreators(actionCreators, dispatch)
@@ -470,8 +461,6 @@ export default App;
 //   const [queryValue,setQueryValue]=useState<string>("");
 //   const [path,setPath]=useState<string>("root");
 
-
-
 //   const buttonHandler = () => {
 
 //   let id= (new Date().getTime() * Math.random() * 100000)
@@ -483,7 +472,7 @@ export default App;
 //         if(newList.parent=='root'){
 //           // setRootList([...rootList,newList])
 //           console.log(rootList,rootList);
-          
+
 //           AddRootList([newList]);
 
 //           console.log(rootList);
@@ -493,37 +482,36 @@ export default App;
 //         if(path!='root'){
 //           let listToberender=_list.filter((singleList)=>{
 
-//             if(path==singleList.parent){                
+//             if(path==singleList.parent){
 //               return singleList
 //             };
-//           }) 
+//           })
 //           if(listToberender!=null){
 //             setCurrentList(listToberender);
 //             }else{
 //               setCurrentList([]);
 //             }
 //         }
-       
+
 //         setType(type)
 //         setName("");
 //         setCreator("");
-//         setSize(0);  
-
+//         setSize(0);
 
 //   };
 
 //   useEffect(()=>{
-//      url="https://api.unsplash.com/search/photos?&per_page=100&page=100&query="+queryValue+"&client_id=nkIb2TlHTpFd4IRQWTgFMF9cFwA60eemmLpwZ7H-cYU"  
+//      url="https://api.unsplash.com/search/photos?&per_page=100&page=100&query="+queryValue+"&client_id=nkIb2TlHTpFd4IRQWTgFMF9cFwA60eemmLpwZ7H-cYU"
 
 //     console.log(list,"list")
 //     console.log(path,"path")
 //     console.log(currentList,"currentList");
-   
+
 //     console.log("------------------------");
-    
+
 //     //console.log(result,"resultsArray");
 //     // console.log(queryValue,"queryvalue");
-    
+
 //   },[list,path,result,queryValue])
 
 //   useEffect(()=>{
@@ -533,24 +521,24 @@ export default App;
 //     return () => {
 //       console.log("unmounted");
 //     };
-  
+
 //   },[])
-  
+
 //   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
 //     if (event.target.name === "name") {
 //       setName(event.target.value);
-//     } 
+//     }
 //     else if(event.target.name=="creator"){
 //       setCreator(event.target.value);
-//     } 
+//     }
 //     else if(event.target.name="size"){
 //       setSize(Number(event.target.value))
 //     }
 //   }
 
-//   const settingPathValue=(val:string,type:string)=>{   
+//   const settingPathValue=(val:string,type:string)=>{
 //      console.log("inside settingpath at 124");
-     
+
 //     let newPath=[];
 //       if(type=="file"){
 //         setQueryValue(val);
@@ -565,18 +553,18 @@ export default App;
 //                     }
 //                 else{
 //                       console.log("'same value");
-                      
+
 //                     }
 //             }
 //             if(path!="root"){
 //               let listToberender=list.filter((singleList)=>{
-                                  
-//                 if(pathValue==singleList.parent){                     
+
+//                 if(pathValue==singleList.parent){
 //                   return singleList
 //                 };
-//               }) 
+//               })
 //               console.log(currentList,"currentList at 118");
-              
+
 //           updateCurrentList(pathValue)
 //           if(listToberender!=null){
 //             setCurrentList(listToberender);
@@ -596,22 +584,22 @@ export default App;
 //                 if(newPath[newPath.length-1]!=val){
 //                       pathValue=path+"/"+val
 //                       setPath(path+"/"+val)
-                    
+
 //                 }
 //                 else{
 //                   console.log("'same value");
-                  
+
 //                 }
-          
+
 //           }
 //           if(path!="root"){
 //             let listToberender=list.filter((singleList)=>{
-                
-//               if(path==singleList.parent){  
-                  
+
+//               if(path==singleList.parent){
+
 //                 return singleList
 //               };
-//             }) 
+//             })
 //             updateCurrentList(pathValue)
 //             if(listToberender!=null){
 //             setCurrentList(listToberender);
@@ -619,12 +607,12 @@ export default App;
 //               setCurrentList([]);
 //             }
 //           }
-//       }   
+//       }
 //   }
 
-//   const settingLeftBarPathValue=(name:string,type:string,parent?:string)=>{   
+//   const settingLeftBarPathValue=(name:string,type:string,parent?:string)=>{
 //     console.log("inside settingpath at 124");
-    
+
 //    let newPath=[];
 //      if(type=="file"){
 //        setQueryValue(name);
@@ -639,18 +627,18 @@ export default App;
 //                    }
 //                else{
 //                      console.log("'same value");
-                     
+
 //                    }
 //            }
 //            if(pathValue!="root"){
 //              let listToberender=list.filter((singleList)=>{
-                                 
-//                if(pathValue==singleList.parent){                     
+
+//                if(pathValue==singleList.parent){
 //                  return singleList
 //                };
-//              }) 
+//              })
 //              console.log(currentList,"currentList at 118");
-             
+
 //          updateCurrentList(pathValue)
 //          if(listToberender!=null){
 //            setCurrentList(listToberender);
@@ -670,22 +658,22 @@ export default App;
 //                if(newPath[newPath.length-1]!=name){
 //                      pathValue=parent+"/"+name
 //                      setPath(pathValue+"/"+name)
-                   
+
 //                }
 //                else{
 //                  console.log("'same value");
-                 
+
 //                }
-         
+
 //          }
 //          if(path!="root"){
 //            let listToberender=list.filter((singleList)=>{
-               
-//              if(pathValue==singleList.parent){  
-                 
+
+//              if(pathValue==singleList.parent){
+
 //                return singleList
 //              };
-//            }) 
+//            })
 //            updateCurrentList(pathValue)
 //            if(listToberender!=null){
 //            setCurrentList(listToberender);
@@ -693,7 +681,7 @@ export default App;
 //              setCurrentList([]);
 //            }
 //          }
-//      }   
+//      }
 //  }
 
 //   function handleSubmit(){
@@ -704,12 +692,12 @@ export default App;
 //        console.log(result);
 //     })
 //     // .catch((err)=>{
-      
+
 //     // })
 //   }
 
 //   const updatePath=()=>{
-   
+
 //     let newPath = path.split("/");
 //     newPath.splice(newPath.length - 1, 1);
 
@@ -719,7 +707,6 @@ export default App;
 //       }
 //     let validPath=newPath.join('/')
 
-    
 //     updateCurrentList(validPath)
 //     setPath(validPath);
 //     setResult([]);
@@ -732,24 +719,23 @@ export default App;
 //     currentList=list.filter((singleList)=>{
 //       return singleList.name.toLowerCase().includes(e.target.value.toLowerCase());
 //     })
- 
+
 //      if(e.target.value==''){
 //       updateCurrentList(path)
 //      }else{
 //        setCurrentList(currentList)
 //      }
 
-
 //   }
 
 //   const updateCurrentList=(validPath:string)=>{
-    
+
 //     console.log(currentList,"currentList at 204");
 //      let listToberender=list.filter((singleList)=>{
-//         if(validPath==singleList.parent){           
+//         if(validPath==singleList.parent){
 //           return singleList
 //         };
-//     }) 
+//     })
 //     if(listToberender!==null){
 //     setCurrentList(listToberender);
 //     }else{
@@ -763,85 +749,65 @@ export default App;
 //   let leftContent=[];
 
 //       leftContent=rootList.filter((singleList)=>{
-        
+
 //           if(singleList.parent=='root'){
 //             leftContent.push(singleList);
 //           }
 //         return singleList
 //       })
-      
-//       let newArr=[...leftContent,newList];    
+
+//       let newArr=[...leftContent,newList];
 //       setSidebarList([...leftContent,...newList]);
 //   }
 
 //   return (
 //     <div className="App">
 
-//         <Leftbar  
+//         <Leftbar
 //                 sideBarList={sideBarList} settingLeftBarPathValue={settingLeftBarPathValue}/>
-//         <Rightbar 
-//                 sideBarList={sideBarList} 
-//                 searchFolder={searchFolder} 
-//                 settingPathValue={settingPathValue}  
-//                 updatePath={ updatePath} 
-//                 currentList={currentList} 
-//                 path={path} 
-//                 rootList={state} 
+//         <Rightbar
+//                 sideBarList={sideBarList}
+//                 searchFolder={searchFolder}
+//                 settingPathValue={settingPathValue}
+//                 updatePath={ updatePath}
+//                 currentList={currentList}
+//                 path={path}
+//                 rootList={state}
 //                 result={result}
 //                 list={list}
-//                 setType={setType} 
-//                 handleChange={handleChange} 
-//                 buttonHandler={buttonHandler} 
-//                 name={name} 
-//                 creator={creator} 
+//                 setType={setType}
+//                 handleChange={handleChange}
+//                 buttonHandler={buttonHandler}
+//                 name={name}
+//                 creator={creator}
 //                 size={size}
 //                 setList={setList}
 //                 />
-          
+
 //     </div>
 //   );
 // }
 // export default App;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // let currentList=[];
 //     useEffect(()=>{
-      
+
 //      currentList list.filter((ls)=>{
-      
+
 //         ls.directory
 
 //       })
 
-      
 //     },[path])
 
-  
-  // const searchImage=(query:string)=>{
-  //   console.log("queryvalueIsNull");
+// const searchImage=(query:string)=>{
+//   console.log("queryvalueIsNull");
 
-  //     setQueryValue(query);
-  //     setTimeout(()=>{  handleSubmit()},2000)
-    
-  // }
+//     setQueryValue(query);
+//     setTimeout(()=>{  handleSubmit()},2000)
 
+// }
 
-    // const handlePhotoname=(event:ChangeEvent<HTMLInputElement>)=>{
-  //      setQueryValue(event.target.value);
-  // }
+// const handlePhotoname=(event:ChangeEvent<HTMLInputElement>)=>{
+//      setQueryValue(event.target.value);
+// }

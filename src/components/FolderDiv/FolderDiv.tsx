@@ -1,4 +1,4 @@
-import img1 from "../images/add-folder.png"
+import img1 from "../../images/add-folder.png"
 import React, { ChangeEvent, Dispatch,SetStateAction } from "react";
 interface Props{
 
@@ -16,20 +16,21 @@ const Folderdiv=({setType,handleChange,buttonHandler,name,creator,size}:Props)=>
 
  
   return(
+
     <div className="folderDiv" >
 
           <div>
               <span>
-                      <img src={img1} width="135px" className="folderDiv33size size"   data-toggle="modal" data-target="#exampleModalCenter" />
+                      <img src={img1} width="135px" className="folderDiv33size size"   data-toggle="modal" data-target="#exampleCenter" />
                  
               </span>
           </div>
 
-          <div className="modal fade" id="exampleModalCenter" tabIndex={-1} role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div className="modal fade" id="exampleCenter" tabIndex={-1} role="dialog" aria-labelledby="exampleCenterTitle" aria-hidden="true">
             <div className="modal-dialog modal-dialog-centered" role="document">
-              <div className="modal-content">
+              <div className="modal-content" style={{background:"	##E8E8E8"}}>
                 <div className="modal-header">
-                  <h5 className="modal-title" id="exampleModalLongTitle" >Create New</h5>
+                  <h3 className="modal-title" id="exampleModalLongTitle" >Create New Folder</h3>
                   <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
@@ -37,34 +38,32 @@ const Folderdiv=({setType,handleChange,buttonHandler,name,creator,size}:Props)=>
                 <div className="modal-body">
                   <span>
                     <span>
-                      <button  onClick={()=> setType("file")} className='create btn-primary'>Create File</button>
+                      <button style={{background: "linear-gradient(75deg, #00E39F, #00C4E1)"}} onClick={()=> setType("file")} className='create btn-primary'>Create File</button>
                     </span>
                     <span>
-                      <button  onClick={()=>setType("folder")}className='create btn-primary'>Create Folder</button>
+                      <button style={{background: "linear-gradient(75deg, #00E39F, #00C4E1)"}} onClick={()=>setType("folder")}className='create btn-primary'>Create Folder</button>
                     </span>
                   </span>
                   <div className='modalInputs'>
                     <div>
-                      <input type="text" value={name}  name="name" onChange={handleChange} placeholder='Name'/>
+                      <input type="text"  value={name}  style={{padding:"20px"}} name="name" onChange={handleChange} placeholder='Name.....'/>
                     </div>
                     <div>
-                      <input type="text" value={creator} name="creator" onChange={handleChange} placeholder='Creator'/>
+                      <input type="text" value={creator} style={{padding:"20px"}}  name="creator" onChange={handleChange} placeholder='Creator.....'/>
                     </div>
                     <div>
-                      <input type="number" value={size} name="size" onChange={handleChange} placeholder='Size'/>
-                    </div>
-                    <div>
-                      <input  type="date"placeholder='Date'/>
+                      <input type="number"  value={size} style={{padding:"20px"}} name="size" onChange={handleChange} placeholder='Size....'/>
                     </div>
                   </div>
                 </div>
                 <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button onClick={buttonHandler} type="button" data-dismiss="modal" className="buttonClick btn btn-primary">Save changes</button>
+                  <button style={{background: "linear-gradient(75deg, #00E39F, #00C4E1)"}} type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button style={{background: "linear-gradient(75deg, #00E39F, #00C4E1)"}} onClick={buttonHandler} type="button" data-dismiss="modal" className="buttonClick btn btn-primary">Save changes</button>
                 </div>
               </div>
             </div>
           </div>
+
         </div>
 
 )
