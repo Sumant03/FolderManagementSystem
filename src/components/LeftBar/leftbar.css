@@ -1,0 +1,38 @@
+.lb11left {
+    width: 15vw;
+    text-align: left;
+    height: "100vh";
+    cursor: pointer;
+    /* height: 100vh; */
+  }
+
+  .leftbar11leftContent {
+    text-decoration: none;
+    height: "100vh";
+    cursor: pointer;
+  }
+
+  .lb11FoldersName {
+    margin-top: 50px;
+    cursor: pointer;
+    background-color: rgb(247, 232, 232);
+  }
+  #leftbar11mySidebar {
+  width: 20%;
+  background-color: #818181;
+  margin: "10px";
+  margin-bottom: "25px";
+  border-radius: "10px";
+  background: "#F2F2F2",
+  }
+
+  #lb11main {
+    transition: margin-left 0.5s;
+    padding: 16px;
+  }
+
+.lbmedia{
+    display:"flex";
+    justify-content:"space-evenly"
+
+}

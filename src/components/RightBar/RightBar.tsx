@@ -8,83 +8,91 @@ import React, {
 import { useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
 import { structure } from "../../interfaces/interface";
-import Folderdiv from "../FolderDiv/FolderDiv";
 import { actionCreators } from "../../exportFile";
 import { RootState } from "../../reducers/index";
 
-import grid from "../../images/grid.png";
+import grid1 from "../../images/grid1.png";
+import grid2 from "../../images/grid2.png";
+import grid3 from "../../images/grid3.png";
+import grid4 from "../../images/grid4.png";
 import err from "../../images/error.png";
+import ThreeDots from "../../images/ThreeDots.png";
+import menu from "../../images/menu.png";
 import noImage from "../../images/noImage.png";
-import DisplayImage from "../DisplayImages/DisplayImages"
+import DisplayData from "../DisplayData/DisplayData";
+
+
+import "./rightBar.css";
+import DisplayImage from "../DisplayImages/DisplayImages";
 
 
 interface Props {
-  settingPathValue(val: string, type: string): void;
-  updatePath: () => void;
-  handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  buttonHandler: () => void;
-  setType: Dispatch<SetStateAction<string>>;
-  currentList: structure[];
+
+
   path: string;
+  type: string;
+  name: string;
+  size: number;
+  error: string;
+  creator: string;
+  loading: boolean;
+  queryValue: string;
   result: structure[];
   list: structure[];
   pathArray: string[];
-  setPath: Dispatch<SetStateAction<string>>;
-  setPathArray: Dispatch<SetStateAction<string[]>>;
-  name: string;
-  creator: string;
-  size: number;
-  error: string;
-  loading: boolean;
-  type: string;
-  setCurrentList: Dispatch<SetStateAction<structure[]>>;
-  updateCurrentList(validPath: string): void;
-  queryValue: string;
+  currentList: structure[];
+  setPath: Dispatch<SetStateAction<string>>;setPathArray: Dispatch<SetStateAction<string[]>>;setCurrentList: Dispatch<SetStateAction<structure[]>>;updateCurrentList(validPath: string): void;settingPathValue(val: string, type: string): void;settingLeftBarPathValue(name: string, type: string, parent?: string): void;updatePath: () => void;handleChange: (event: ChangeEvent<HTMLInputElement>) => void;buttonHandler: () => void;setType: Dispatch<SetStateAction<string>>;setError: Dispatch<SetStateAction<string>>;setLoading: Dispatch<SetStateAction<boolean>>;
+
 }
 
 const Rightbar = ({
-  settingPathValue,
-  updatePath,
-  currentList,
+
   path,
   result,
-  setType,
-  handleChange,
-  buttonHandler,
   name,
   creator,
   size,
-  setCurrentList,
-  updateCurrentList,
   error,
   type,
+  loading,
   pathArray,
+  currentList,
   setPath,
+  setType,
+  setError,
+  updatePath,
+  setLoading,
+  settingPathValue,
+  handleChange,
+  buttonHandler,
   setPathArray,
-  queryValue
+  setCurrentList,
+  updateCurrentList,
+  queryValue,
+  settingLeftBarPathValue,
 }: Props) => {
   const dispatch = useDispatch();
 
-  const { DeleteRootList, DeleteList, DeleteCurrentList } = bindActionCreators(
-    actionCreators,
-    dispatch
-  );
+
   const rootList = useSelector((state: RootState) => state.rootList);
   const list = useSelector((state: RootState) => state.list);
-  const [toggle,setToggle]=useState<boolean>(false);
-  const [toggleDelete,setToggleDelete]=useState<boolean>(false);
+  const [toggle, setToggle] = useState<boolean>(false);
+  const [toggleDelete, setToggleDelete] = useState<boolean>(false);
+  const [typeOfDisplay, setTypeOfDisplay] = useState<number>(1);
+
+  const breadCrumStyle= { display: "flex", justifyContent: "space-around" }
+  const pathStyle={ display: "flex", justifyContent: "space-between" }
+  const gridStyle={ margin: "10px", width: "40px" }
+  const noImageStyle={ margin: "10px", width: "40px" }
+  let toggleStyle={ margin: "20px", fontSize: "20px", fontWeight: "200" }
+  let itemStyle={ display: "flex" }
+  let uploadStyle={margin: "0 10px 0 10px",fontSize: "20px",fontWeight: "200",padding: "24px",color: "#6CA0DC",
+  }
 
   useEffect(() => {
     console.log(pathArray);
-  }, [pathArray,toggle,toggleDelete]);
-
-  function deletingRootList(id: number, parent?: string, name?: string) {
-    DeleteRootList({ id, parent, name });
-    DeleteList({ id, parent, name });
-    DeleteCurrentList({ id, parent, name });
-    DeleteCurrentList({ id, parent, name });
-    setToggleDelete(!toggleDelete);
-  }
+    console.log(typeOfDisplay);
+  }, [pathArray, toggle, toggleDelete, typeOfDisplay]);
 
   const debounce = <T extends (...args: any[]) => ReturnType<T>>(
     callback: T,
@@ -146,170 +154,317 @@ const Rightbar = ({
       setCurrentList([]);
     }
   };
-  const settingPathOnBreadCrumRight = (val: string) => {
-    let idx = pathArray.indexOf(val);
-    let arr = pathArray.slice(0, idx + 1);
-    let str = arr.join("/");
 
-    localStorage.setItem("path", str);
-    setPath(str);
-
-    if (arr.length < 1) {
-      setPathArray(["root"]);
-    } else {
-      setPathArray(arr);
-    }
-
-    let listToberender = list.filter((singleList) => {
-      if (str == singleList.parent) {
-        return singleList;
-      }
-    });
-    updateCurrentList(str);
-
-    if (listToberender != null) {
-      setCurrentList(listToberender);
-    } else {
-      setCurrentList([]);
-    }
-  };
-
-  function sortArryOnSize(){
-  let arr = currentList.sort((a, b) => {
-      return a.size - b.size;
-   });
-  let arr2 = list.sort((a, b) => {
-    return a.size - b.size;
-  });
-  console.log("clicked");
-  console.log(arr);
-  
-  
-  updateCurrentList(path);
-  setCurrentList(arr);
-  setToggle(!toggle)
-  // updatePath();
-  }
-
-  function sortArryOnName(){
+  function sortArryOnSize() {
     let arr = currentList.sort((a, b) => {
-      let fa = a.name.toLowerCase(),
-      fb = b.name.toLowerCase();
-
-      if (fa < fb) {
-          return -1;
-      }
-      if (fa > fb) {
-          return 1;
-      }
-      return 0;
-        });
-    let arr2 = list.sort((a, b) => {
-      let fa = a.name.toLowerCase(),
-      fb = b.name.toLowerCase();
-
-      if (fa < fb) {
-          return -1;
-      }
-      if (fa > fb) {
-          return 1;
-      }
-      return 0;
+      return a.size - b.size;
     });
-    console.log("clicked");
-    console.log(arr);
-    
-    
+    let arr2 = list.sort((a, b) => {
+      return a.size - b.size;
+    });
+    // console.log("clicked");
+    // console.log(arr);
+
     updateCurrentList(path);
     setCurrentList(arr);
-    setToggle(!toggle)
+    setToggle(!toggle);
     // updatePath();
-    }
+  }
 
+  function sortArryOnName() {
+    let arr = currentList.sort((a, b) => {
+      let fa = a.name.toLowerCase(),
+        fb = b.name.toLowerCase();
 
+      if (fa < fb) {
+        return -1;
+      }
+      if (fa > fb) {
+        return 1;
+      }
+      return 0;
+    });
+    let arr2 = list.sort((a, b) => {
+      let fa = a.name.toLowerCase(),
+        fb = b.name.toLowerCase();
+
+      if (fa < fb) {
+        return -1;
+      }
+      if (fa > fb) {
+        return 1;
+      }
+      return 0;
+    });
+    // console.log("clicked");
+    // console.log(arr);
+
+    updateCurrentList(path);
+    setCurrentList(arr);
+    setToggle(!toggle);
+    // updatePath();
+  }
 
   return (
-    <div className="right">
-      <div
-        className="navbar"
-        style={{
-          width: "100%",
-          display: "flex",
-
-        }}
-      >
-        <div style={{ display: "flex", marginRight: "450px" }}>
-          <i
-            onClick={updatePath}
-            className="bi bi-arrow-left"
-            style={{ fontSize: "40px" }}
-          ></i>
-          <span
-            style={{
-              fontWeight: "bold",
-              fontSize: "large",
-              marginLeft: "20px",
-              display: "flex",
-              flexDirection: "row",
-            }}
+    <div className="rb22right">
+      <div className="rb22navbar  navbar">
+        <div className="rb22backAndBread"
+         style={breadCrumStyle}>
+          <div  className="rb22path"
+            style={pathStyle}
           >
-            {pathArray.map((val: string) => {
-              return (
-                <span
-                  style={{ marginRight: "10px" }}
-                  onClick={() => settingBreadCrum(val)}
-                >
-                  <p className="rightBar22bread">{val + ">"}</p>
-                </span>
-              );
-            })}
-          </span>
-          
+            <i className="rb22Left bi bi-arrow-left"
+              onClick={updatePath}
+              style={{ fontSize: "40px" }}
+            ></i>
+            <span
+              style={{
+                fontWeight: "bold",
+                fontSize: "large",
+                marginLeft: "20px",
+                display: "flex",
+                flexDirection: "row",
+              }}
+            >
+              {pathArray.map((val: string) => {
+                return (
+                  <span
+                    style={{ marginRight: "10px" }}
+                    onClick={() => settingBreadCrum(val)}
+                  >
+                    <p className="rightBar22bread">{val + " >"}</p>
+                  </span>
+                );
+              })}
+            </span>
+          </div>
+          <div className=" dropdown show"
+            style={{ display: "flex", flexDirection: "row", padding: "20px" }}
+          >
+            <a className="rb22sortFolders bi bi-filter-left dropdown-toggle"
+              href="#"
+              role="button"
+              id="dropdownMenuLink"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+              style={{ fontSize: "25px" }}
+            ></a>
+            <div
+              className="rb22dropdown dropdown-menu"
+              aria-labelledby="dropdownMenuLink"
+            >
+              <p
+                className=" rb22sortBySize dropdown-item"
+                onClick={sortArryOnSize}
+              >
+                Size
+              </p>
+              <p
+                className="rb22sortByName dropdown-item"
+                onClick={sortArryOnName}
+              >
+                Name
+              </p>
+            </div>
+          </div>
+          <div 
+          style={{ color: "white" }}>
+            <h1>{"i d dvdasgj"}</h1>
+          </div>
         </div>
-        <div>
-        <div className="dropdown show">
-            <a className="bi bi-filter-left dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style={{fontSize:"25px"}}>
 
-            </a>
 
-            <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
-              <p className="dropdown-item" onClick={sortArryOnSize} >Size</p>
-              <p className="dropdown-item" onClick={sortArryOnName}>Name</p>
-              <p className="dropdown-item" >Date</p>
+        <div className="rb22dropdowndiv" 
+          style={{ display: "flex" }}>
+          <div
+            className=" rb22dropdown dropdown show"
+            style={{ padding: "20px" }}
+          >
+            <a
+              className="bi bi-tags-fill dropdown-toggle"
+              href="#"
+              role="button"
+              id="dropdownMenuLinkFortags"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+              style={toggleStyle}
+            ></a>
+
+            <div
+              className="dropdown-menu"
+              aria-labelledby="dropdownMenuLinkFortags"
+              style={{ padding: "3px" }}
+            >
+              <input
+                type="text"
+                style={{ padding: "5px", borderRadius: "10px" }}
+                placeholder="Add your tags......"
+              />
+              <p
+                className="dropdown-item"
+                style={itemStyle}
+              >
+                <span
+                  style={{ color: "red", marginRight: "10px" }}
+                  className="bi bi-circle-fill "
+                >
+                  {" "}
+                </span>
+                <span>Red</span>
+              </p>
+              <p
+                className="dropdown-item"
+                style={itemStyle}
+              >
+                <span
+                  style={{ color: "blue", marginRight: "10px" }}
+                  className="bi bi-circle-fill "
+                >
+                  {" "}
+                </span>
+                <span>Blue</span>
+              </p>
+              <p
+                className="dropdown-item"
+                style={itemStyle}
+              >
+                <span
+                  style={{ color: "grey", marginRight: "10px" }}
+                  className="bi bi-circle-fill "
+                >
+                  {" "}
+                </span>
+                <span>Grey</span>
+              </p>
+              <p
+                className="dropdown-item"
+                style={itemStyle}
+              >
+                <span
+                  style={{ color: "green", marginRight: "10px" }}
+                  className="bi bi-circle-fill "
+                >
+                  {" "}
+                </span>
+                <span>Green</span>
+              </p>
+              <p
+                className="dropdown-item"
+                style={itemStyle}
+              >
+                <span
+                  style={{ color: "yellow", marginRight: "10px" }}
+                  className="bi bi-circle-fill "
+                >
+                  {" "}
+                </span>
+                <span>Yellow</span>
+              </p>
+              <p
+                className="dropdown-item"
+                style={itemStyle}
+              >
+                <span
+                  style={{ color: "purple", marginRight: "10px" }}
+                  className="bi bi-circle-fill "
+                >
+                  {" "}
+                </span>
+                <span>Purple</span>
+              </p>
+              <p className="dropdown-item">
+                {" "}
+                # Show All
+              </p>
+            </div>
+          </div>
+
+          <div
+            className="rb22uploadIcon  bi bi-upload"
+            style={uploadStyle}></div>
+
+          <div
+            className="rb22dropdown dropdown show"
+            style={{ padding: "20px" }}
+          >
+            <img
+              className="rb22toggle dropdown-toggle"
+              width="30px"
+              role="button"
+              id="dropdownMenuLinkForAllItems"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+              height="30px"
+              src={ThreeDots}
+            />
+
+            <div
+              className="rb22dropdownMenu dropdown-menu"
+              aria-labelledby="dropdownMenuLinkForAllItems"
+              style={{ padding: "5px" }}
+            >
+              <img height="350px" src={menu} />
             </div>
           </div>
         </div>
-        <div style={{ display: "flex" }}>
-          <img width="250px" style={{ margin: "10px" }} src={grid} />
-          {/* <span  
-            onClick={sortArry}
-            className="bi bi-filter-left"
-            style={{ fontSize: "40px", marginTop: "10px" }}>
-          </span> */}
 
+
+        <div className="rb22gridView" 
+         style={{ display: "flex" }}>
+          <img
+            className="rb22grid"
+            onClick={() => setTypeOfDisplay(1)}
+            style={gridStyle}
+            src={grid1}
+          />
+          <img
+            className="rb22grid"
+            onClick={() => setTypeOfDisplay(2)}
+            style={gridStyle}
+            src={grid2}
+          />
+          <img
+            className="rb22grid"
+            onClick={() => setTypeOfDisplay(3)}
+            style={gridStyle}
+            src={grid3}
+          />
+          <img
+            className="rb22grid"
+            onClick={() => setTypeOfDisplay(4)}
+            style={gridStyle}
+            src={grid4}
+          />
         </div>
-        <div>
-          <div
-            className="container"
+
+
+        <div className="rb22Search">
+          <div className="rb22container"
             style={{
               display: "flex",
               flexDirection: "row",
               marginLeft: "20px",
-            }}
-          >
-            <span className="bi bi-search" style={{ fontSize: "20px" }}></span>
+            }}>
+            <span
+              className="rb22searchIcon bi bi-search"
+              style={{ fontSize: "20px" }}>
+            </span>
             <span>
               {" "}
               <input
-                style={{ width: "200px", height: "45px", borderRadius: "1px" }}
+                className="rightBar22searchBar"
                 onChange={(e) => myDebouncedFunction(e.target.value)}
                 placeholder="Search your Folder/File...."
                 type="text"
                 list="suggestions"
+                style={{ width: "200px", height: "45px", borderRadius: "1px" }}
               />
             </span>
 
-            <datalist id="suggestions">
+            <datalist className="rb22sgg" id="suggestions">
               <option>docs</option>
               <option>apple</option>
               <option>videos</option>
@@ -318,159 +473,34 @@ const Rightbar = ({
             </datalist>
           </div>
         </div>
+
       </div>
 
-      <div
-        className="displayData"
-        style={{ display: "flex", overflow: "auto", padding: "50px" }}
-      >
-        <span style={{ display: "flex", flexWrap: "wrap" }}>
-          {currentList.length > 0 || path != "root"
-            ? currentList.map((singleList: structure, key: number) => {
-              return (
-                <span key={key} style={{ alignItems: "center" }}>
-                  <span
-                    className={"rigthBar22folder size bi bi-folder-fill "}
-                    onClick={() =>
-                      settingPathValue(singleList.name, singleList.type)
-                    }
-                    style={{ color: "#00BFFF" }}
-                  ></span>
-                  <span>
-                    <div
-                      className="dropdown"
-                      style={{
-                        display: "flex",
-                        alignContent: "center",
-                        marginLeft: "30px",
-                      }}
-                    >
-                      <p style={{ alignContent: "center" }}>
-                        {singleList.name}
-                      </p>
-                      <a
-                        style={{
-                          backgroundColor: "white",
-                          color: "black",
-                          border: "none",
-                        }}
-                        className="btn btn-secondary dropdown-toggle"
-                        href="#"
-                        role="button"
-                        id="dropdownMenuLink"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        {" "}
-                      </a>
+      <DisplayData
+        path={path}
+        currentList={currentList}
+        rootList={rootList}
+        settingPathValue={settingPathValue}
+        setType={setType}
+        toggleDelete={toggleDelete}
+        setToggleDelete={setToggleDelete}
+        handleChange={handleChange}
+        buttonHandler={buttonHandler}
+        name={name}
+        creator={creator}
+        size={size}
+        typeOfDisplay={typeOfDisplay}
+        type={type}
+        settingLeftBarPathValue={settingLeftBarPathValue}
+      />
 
-                      <ul
-                        className="dropdown-menu"
-                        aria-labelledby="dropdownMenuLink"
-                      >
-                        <li>
-                          <p className="dropdown-item ">
-                            Get Info
-                          </p>
-                        </li>
-                        <li>
-                          <a
-                            onClick={() =>
-                              deletingRootList(
-                                singleList.id,
-                                singleList.parent,
-                                singleList.name
-                              )
-                            }
-                            className="dropdown-item"
-                            href="#"
-                          >
-                            Delete
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </span>
-                </span>
-              );
-            })
-            : rootList.length > 1
-              ? rootList.map((singleList: structure, key: number) => {
-                return (
-                  <span key={key} style={{ alignItems: "center" }}>
-                    <span
-                      onClick={() =>
-                        settingPathValue(singleList.name, singleList.type)
-                      }
-                      style={{ color: "#00BFFF" }}
-                      className={"size bi bi-folder-fill "}
-                    ></span>
-
-                    <p style={{ alignContent: "center" }}>
-                      {singleList.name}{" "}
-                      <span
-                        className="dropdown"
-                        style={{ backgroundColor: "white" }}
-                      >
-                        <button
-                          style={{ backgroundColor: "white", color: "black" }}
-                          className="btn btn-secondary dropdown-toggle"
-                          type="button"
-                          id="dropdownMenuButton1"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false"
-                        ></button>
-                        <ul
-                          className="dropdown-menu"
-                          aria-labelledby="dropdownMenuButton1"
-                        >
-                          <li>
-                            <p className="dropdown-item" >
-                              Get Info
-                            </p>
-                          </li>
-
-                          <li>
-                            <a
-                              className="dropdown-item"
-                              onClick={() =>
-                                deletingRootList(
-                                  singleList.id,
-                                  singleList.parent,
-                                  singleList.name
-                                )
-                              }
-                              href="#"
-                            >
-                              Delete
-                            </a>
-                          </li>
-                        </ul>
-                      </span>
-                    </p>
-                  </span>
-                );
-              })
-              : ""}
-          <span style={{ padding: "10px 50px 15px 0px" }}>
-            <Folderdiv
-              setType={setType}
-              handleChange={handleChange}
-              buttonHandler={buttonHandler}
-              name={name}
-              creator={creator}
-              size={size}
-            />
-          </span>
-        </span>
-      </div>
-
-      {/* <div>
-        {result.length > 0 && !error ? (
+      <div className="rb22Images" >
+        {!error && result?.length > 0 ? (
           result.map((photo: any, key: number) => {
             return (
               <>
                 <img
+                  className="rb22Images"
                   width="250px"
                   height="250px"
                   style={{ margin: "10px", borderRadius: "15px" }}
@@ -481,20 +511,20 @@ const Rightbar = ({
                 />
 
                 <div
-                  className="modal fade"
+                  className="rb22Modal modal fade"
                   id={`exampleModalCenterDiv${key}`}
                   tabIndex={-1}
                   role="dialog"
                   aria-labelledby="exampleModalCenterTitle"
                   aria-hidden="true"
                 >
-                  <div
-                    className="modal-dialog modal-dialog-centered"
+                  <div className="rb22centerModal modal-dialog modal-dialog-centered"
                     role="document"
                   >
-                    <div className="modal-content">
-                      <div className="modal-body">
+                    <div className=" rb22modalContent modal-content">
+                      <div className="rb22modalBody modal-body">
                         <img
+                          className="rb22imageUrl"
                           width="450px"
                           height="450px"
                           style={{ margin: "10px", borderRadius: "15px" }}
@@ -502,10 +532,10 @@ const Rightbar = ({
                           src={photo.urls.small}
                         />
                       </div>
-                      <div className="modal-footer">
+                      <div className="rb22modalFooter modal-footer">
                         <button
+                          className="rb22button btn btn-secondary"
                           type="button"
-                          className="btn btn-secondary"
                           data-dismiss="modal"
                         >
                           Close
@@ -517,269 +547,24 @@ const Rightbar = ({
               </>
             );
           })
-        ) : error.length > 1 ? (
+        ) : error.length > 1 && path != "root" && type != "folder" ? (
           <div>
             <h1>{error}</h1>
-            <img src={err} />
+            <img  src={err} />
           </div>
         ) : path != "root" && type == "file" ? (
-          <img width="400px" height="300px" src={noImage} />
+          <>
+          {/* <img width="450px" height="450px" style={noImageStyle} src={noImage} /> */}
+          <h1>No Image Found !!!</h1></>
+
         ) : (
           ""
         )}
-      </div> */}
-      
-      <DisplayImage queryValue={queryValue} type={type} path={path}/>
+      </div>
+      {/* <DisplayImage queryValue={queryValue} type={type} path={path} setError={setError} setLoading={setLoading} error={error} loading={loading}/> */}
 
     </div>
   );
 };
 
 export default Rightbar;
-
-{
-  /* <div className='right'>
-         
-          <div className='rightContent' style={{overflow: "auto"}}>
-          <div style={{width:"100%",display:"flex"}}>
-          <i  onClick={updatePath} className="bi bi-arrow-return-left" style={{ fontSize:"40px"}}></i>
-              <div className='navbar'>
-            <div style={{display:"flex",justifyContent:"space-between",marginBottom:"40px"}}>
-             <i  onClick={updatePath} className="bi bi-arrow-return-left" style={{ fontSize:"40px",marginRight:"50px"}}></i>
-            <span style={{fontWeight:"bold",fontSize:"large",marginTop:"20px" ,marginLeft:"50px",marginRight:"150px"}}>{path}</span>
-            </div>
-            <div>
-                <div >
-                  <input  style={{width:"250px",height:"45px",borderRadius:'5px'}} onChange={searchFolder} placeholder='Search your Folder/File....' />
-                </div>
-          </div>
-          </div>
-
-          </div>
-
-
-  
-          </div>
-
-          <div className='displayData' style={{display:"flex",overflow: "auto"}}>
-              <span style={{display:"flex",flexWrap:"wrap"}}>{ 
-                                  
-                                  (currentList.length>0||path!='root')?
-                                  currentList.map((singleList: structure, key: number) => {
-    
-                            return  ( <span key={key}style={{alignItems:"center"}}>
-                                          <span  onClick={()=> settingPathValue(singleList.name,singleList.type)} style={{color: 'lightblue'}} className={"size bi bi-folder-fill "}></span>
-                                          <p style={{alignContent:"center"}}>{singleList.name}</p>
-                                     </span>)
-                                    }):
-                                    rootList.length>1?
-                                    rootList.map((singleList: structure, key: number) => {
-                             return  (<span key={key}style={{alignItems:"center"}}>
-                                          <span  onClick={()=> settingPathValue(singleList.name,singleList.type)} style={{color: 'lightblue'}} className={"size bi bi-folder-fill "}></span>
-                                          <p style={{alignContent:"center"}}>{singleList.name}</p>
-                                      </span>)
-                                    }):
-
-                                    <i className="size bi bi-plus-square-dotted"  data-toggle="modal" data-target="#exampleModalCenter" ></i>}
-                  <span style={{padding:"10px 50px 25px 0px"}}>
-            <Folderdiv 
-                settingPathValue={settingPathValue} 
-                setType={setType} 
-                handleChange={handleChange} 
-                buttonHandler={buttonHandler} 
-                name={name} 
-                creator={creator} 
-                size={size}/>
-                  </span>                
-              </span>
-          </div>
-
-          <div >
-              {result.length>0?result.map((photo:any,key:number)=>{
-                return <img width="100px" height="100px" style={{margin:"10px",borderRadius:"15px"}}key={key} src={photo.urls.small}/>
-              }):""}
-            </div>
-
-          </div> */
-}
-
-// function trigger(trigger: any, arg1: { onClick: () => void; }): React.ReactNode {
-//   throw new Error("Function not implemented.");
-// }
-//updated Content
-
-//       <div className='right'>
-
-// <div className='rightContent' style={{overflow: "auto"}}>
-// <div style={{width:"100%",display:"flex"}}>
-//     <div className='navbar'>
-//   <div style={{display:"flex",justifyContent:"space-between",marginBottom:"40px"}}>
-//    <i  onClick={updatePath} className="bi bi-arrow-return-left" style={{ fontSize:"40px",marginRight:"50px"}}></i>
-//   <span style={{fontWeight:"bold",fontSize:"large",marginTop:"20px" ,marginLeft:"50px",marginRight:"150px"}}>{path}</span>
-//   </div>
-//   <div>
-//       <div >
-//         <input  style={{width:"250px",height:"45px",borderRadius:'5px'}} onChange={searchFolder} placeholder='Search your Folder/File....' />
-//       </div>
-// </div>
-// </div>
-
-// </div>
-
-// </div>
-
-// <div className='displayData' style={{display:"flex",overflow: "auto"}}>
-//     <span style={{display:"flex",flexWrap:"wrap"}}>{
-
-//                         (currentList.length>0||path!='root')?
-//                         currentList.map((singleList: structure, key: number) => {
-
-//                   return  ( <span key={key}style={{alignItems:"center"}}>
-//                                 <span  onClick={()=> settingPathValue(singleList.name,singleList.type)} style={{color: 'lightblue'}} className={"size bi bi-folder-fill "}></span>
-//                                 <p style={{alignContent:"center"}}>{singleList.name}</p>
-//                            </span>)
-//                           }):
-//                           rootList.length>1?
-//                           rootList.map((singleList: structure, key: number) => {
-//                    return  (<span key={key}style={{alignItems:"center"}}>
-//                                 <span  onClick={()=> settingPathValue(singleList.name,singleList.type)} style={{color: 'lightblue'}} className={"size bi bi-folder-fill "}></span>
-//                                 <p style={{alignContent:"center"}}>{singleList.name}</p>
-//                             </span>)
-//                           }):
-
-//                           <i className="size bi bi-plus-square-dotted"  data-toggle="modal" data-target="#exampleModalCenter" ></i>}
-//         <span style={{padding:"10px 50px 25px 0px"}}>
-//   <Folderdiv
-//       settingPathValue={settingPathValue}
-//       setType={setType}
-//       handleChange={handleChange}
-//       buttonHandler={buttonHandler}
-//       name={name}
-//       creator={creator}
-//       size={size}/>
-//         </span>
-//     </span>
-// </div>
-
-// <div >
-//     {result.length>0?result.map((photo:any,key:number)=>{
-//       return <img width="100px" height="100px" style={{margin:"10px",borderRadius:"15px"}}key={key} src={photo.urls.small}/>
-//     }):""}
-//   </div>
-
-// </div>
-
-// before implementing redux
-
-//     import { setMaxListeners } from "events";
-// import React, { ChangeEvent, Dispatch, MouseEventHandler ,SetStateAction } from "react";
-// import { structure } from "../interfaces/interface";
-// import DisplayName from "./DisplayName"
-// import Folderdiv from "./folderDiv"
-
-// interface Props{
-//     sideBarList:structure[]
-//     settingPathValue(val:string,type:string):void
-//     updatePath:()=>void
-//     searchFolder:(e: ChangeEvent<HTMLInputElement>)=>void
-//     handleChange:(event: ChangeEvent<HTMLInputElement>)=>void
-//     buttonHandler:()=>void
-//     setType: Dispatch<SetStateAction<string>>
-//     setList: Dispatch<SetStateAction<structure[]>>
-//     currentList:structure[]
-//     path:string
-//     rootList:structure[]
-//     result:structure[]
-//     list:structure[]
-//     name:string
-//     creator:string
-//     size:number
-//     }
-
-// const Rightbar=({settingPathValue,updatePath,searchFolder,currentList,path,rootList,result,setType,handleChange,buttonHandler,name,creator,size,list,setList}:Props)=>{
-//     const deleteFolder=(id:number,parent?:string,name?:string )=>{
-
-//     let updatedList=  list.filter((singleList)=>{
-//         let parentvaluePlusName=parent+"/"+name;
-//         if(singleList.id!=id||singleList.parent!=parentvaluePlusName){
-//           return singleList;
-//         }
-//       })
-
-//       setList([...updatedList])
-
-//     console.log("testing 42");
-
-//     }
-
-//   return(
-
-//     <div className='right'>
-
-//     <div className='rightContent' style={{overflow: "auto"}}>
-//     <div style={{width:"100%",display:"flex"}}>
-//         <div className='navbar'>
-//       <div style={{display:"flex",justifyContent:"space-between",marginBottom:"40px"}}>
-//        <i  onClick={updatePath} className="bi bi-arrow-return-left" style={{ fontSize:"40px",marginRight:"50px"}}></i>
-//       <span style={{fontWeight:"bold",fontSize:"large",marginTop:"20px" ,marginLeft:"50px",marginRight:"150px"}}>{path}</span>
-//       </div>
-//       <div>
-//           <div >
-//             <input  style={{width:"250px",height:"45px",borderRadius:'5px'}} onChange={searchFolder} placeholder='Search your Folder/File....' />
-//           </div>
-//     </div>
-//     </div>
-
-//     </div>
-
-//     </div>
-
-//     <div className='displayData' style={{display:"flex",overflow: "auto"}}>
-//         <span style={{display:"flex",flexWrap:"wrap"}}>{
-
-//                             (currentList.length>0||path!='root')?
-//                             currentList.map((singleList: structure, key: number) => {
-
-//                       return  ( <span key={key}style={{alignItems:"center"}}>
-//                                     <span  onClick={()=> settingPathValue(singleList.name,singleList.type)} style={{color: 'lightblue'}} className={"size bi bi-folder-fill "}></span>
-//                                     <span>
-//                                     <p style={{alignContent:"center"}}>{singleList.name}<span onClick={()=>deleteFolder(singleList.id,singleList.parent,singleList.name)} className="bi bi-trash"></span></p>
-
-//                                     </span>
-//                                </span>)
-//                               }):
-//                               rootList.length>1?
-//                               rootList.map((singleList: structure, key: number) => {
-//                        return  (<span key={key}style={{alignItems:"center"}}>
-//                                     <span  onClick={()=> settingPathValue(singleList.name,singleList.type)} style={{color: 'lightblue'}} className={"size bi bi-folder-fill "}></span>
-
-//                                     <p style={{alignContent:"center"}}>{singleList.name}  <span onClick={()=>deleteFolder(singleList.id,singleList.parent,singleList.name)} className="bi bi-trash"></span></p>
-
-//                                 </span>)
-//                               }):
-
-//                               <i className="size bi bi-plus-square-dotted"  data-toggle="modal" data-target="#exampleModalCenter" ></i>}
-//             <span style={{padding:"10px 50px 25px 0px"}}>
-//       <Folderdiv
-//           setType={setType}
-//           handleChange={handleChange}
-//           buttonHandler={buttonHandler}
-//           name={name}
-//           creator={creator}
-//           size={size}/>
-//             </span>
-//         </span>
-//     </div>
-
-//     <div >
-//         {result.length>0?result.map((photo:any,key:number)=>{
-//           return <img width="250px" height="250px" style={{margin:"10px",borderRadius:"15px"}}key={key} src={photo.urls.small}/>
-//         }):""}
-//       </div>
-
-//     </div>
-
-//   )
-// }
-
-// export default Rightbar;

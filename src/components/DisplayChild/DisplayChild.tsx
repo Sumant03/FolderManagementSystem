@@ -5,6 +5,8 @@ import { structure } from "../../interfaces/interface";
 import { RootState } from "../../reducers/index";
 import LeftbarNext from "../LeftbarNext/LeftbarNext";
 
+import "./displayChild.css"
+
 interface Props {
   h3Name?: string;
   h3Parent?: string;
@@ -16,7 +18,10 @@ const DisplayChildName = ({
   h3Parent,
   settingLeftBarPathValue,
 }: Props) => {
+
   const list = useSelector((state: RootState) => state.list);
+  let displayNameStyle={ display: "flex", marginLeft: "60px" }
+  let folderStyle={ margin: "10px", color: "#00BFFF" }
 
   let pathPresent = h3Parent + "/" + h3Name;
   const h3listTobeRendered = list.filter((singleList) => {
@@ -33,14 +38,13 @@ const DisplayChildName = ({
           <div>
             <div className=" DisplayName_23_hoverAdded accordion-item ">
               <h3
-                style={{ display: "flex", marginLeft: "60px" }}
-                className="accordion-header"
+                className="dn23accordian accordion-header"
+                style={displayNameStyle}
                 id="headingOne"
               >
                 <span>
-                  <i
-                    style={{ margin: "10px", color: "#00BFFF" }}
-                    className="bi bi-folder-fill"
+                  <i className="dn23folder bi bi-folder-fill"
+                    style={folderStyle}
                   ></i>
                 </span>
                 <button
@@ -51,7 +55,7 @@ const DisplayChildName = ({
                       listDetails.parent
                     );
                   }}
-                  className="accordion-button"
+                  className="dn23accordianBtn accordion-button"
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseOne"

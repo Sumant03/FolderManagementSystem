@@ -1,6 +1,4 @@
 export const DummmyFileStructure=[
-
-
     {
     id:81513253631129440,
     type:"folder",

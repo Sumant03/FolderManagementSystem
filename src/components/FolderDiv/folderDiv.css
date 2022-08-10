@@ -1,0 +1,13 @@
+  .folderDiv33div {
+    right: 0;
+    width: 10vw;
+    cursor: pointer;
+  }
+  .folderDiv33size {
+    font-size: 100px;
+    cursor: pointer;
+  }
+  .folderDiv33textColor{
+    background: "linear-gradient(75deg, #00E39F, #00C4E1)";
+    color:"black"
+  }

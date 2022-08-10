@@ -1,0 +1,38 @@
+.rightBar22size {
+    font-size: 100px;
+    padding: 20px;
+    cursor: pointer;
+  }
+
+.displayData44GetInfo{
+    width:"25%";
+    height:"50%";
+    padding:"0px";
+    display:"none";
+    justify-content:"center";
+    margin:"auto";
+    border:"2px grey solid";
+    z-index:"2";
+    background: "linear-gradient(75deg, #00E39F, #00C4E1)";
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+}
+.dd44upperBar{
+    width:"70%";
+    display:"flex";
+    justify-content:"center";
+    margin:"auto"
+}
+.dd44bottomBar{
+    width:"30%";
+    border-left:"2px grey solid";
+    height:"100%"
+}
+.dd44folderDiv{
+    display: "flex";
+    flex-direction:"row";
+    width:"100%";
+    overflow-x: "scroll";
+    position:"absolute";
+    bottom:"20px"
+}

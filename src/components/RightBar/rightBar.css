@@ -22,7 +22,7 @@
  }
 
  .rightBar22links {
-    color: rgb(255, 255, 255);
+    color: var(--primary-color);
     padding: 12px 16px;
     text-decoration: none;
     display: block;
@@ -36,3 +36,64 @@
  .rigthBar22dropdown-menu :hover .menu-btn {
     background-color: #3e8e41;
  }
+
+ .rb22right {
+   overflow-x: auto;
+   width: 85vw;
+   padding:"50px";
+   /* height:"200px" */
+ }
+ .rightBar22bread:hover {
+   background-color: #f2f2f2;
+ }
+ .rightBar22searchBar {
+   height: "50px";
+   width: "300px";
+   padding: "20px";
+ }
+
+ .rigthBar22navbar {
+   width: 100%;
+   cursor: pointer;
+   width: "100%";
+   display: "flex";
+   justify-content:"space-around"
+ }
+ .rigthBar22navbar  span {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-around;
+   cursor: pointer;
+ }
+
+ .rb22container{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border: 1px solid;
+  border-radius: 10px;
+}
+.rb22container input {
+  padding: 10px 20px;
+  background: white;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+}
+.navbar{
+   width: "100%";
+   display: "flex";
+   justify-content:"space-evenly"
+ }
+
+.rb22backAndBread{
+
+   display: "flex" !important;
+   justify-content:"space-around" !important;
+}
+.rb22gid{
+   width:"30px";
+   margin: "10px"
+}

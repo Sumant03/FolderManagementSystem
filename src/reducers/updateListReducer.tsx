@@ -18,14 +18,7 @@ const listReducer = (
   switch (action.type) {
     case ActionType.ADDLIST:
       console.log([...state, ...action.payload]);
-      // localStorage.setItem('list', JSON.stringify([...state,...action.payload]));
-      // let listFromStorage:structure[]|string|null=localStorage.getItem("list");
-      // let arr=[JSON.parse(window.localStorage.getItem("list"))];
-      window.localStorage.setItem(
-        "list",
-        JSON.stringify([...state, ...action.payload])
-      );
-
+      localStorage.setItem('list', JSON.stringify([...state,...action.payload]));
       return [...state, ...action.payload];
     case ActionType.DELETELIST:
       let id = action.payload.id;
@@ -38,13 +31,8 @@ const listReducer = (
           return singleList;
         }
       });
-      console.log(id, "id in reducer");
-      console.log(parent, "parent in reducer");
-      console.log(name, "name in reducer");
-      console.log(updatedList);
       window.localStorage.setItem("list", JSON.stringify(updatedList));
       return updatedList;
-
     default:
       return state;
   }

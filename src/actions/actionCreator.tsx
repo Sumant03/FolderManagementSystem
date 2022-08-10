@@ -6,7 +6,7 @@ import { structure,DeletingState,IupdateCurrentList} from "../interfaces/interfa
 
 
 
-export const AddRootList = (amount: structure[]) => {
+export const addRootList = (amount: structure[]) => {
     return (dispatch: Dispatch<Action>) => {
         dispatch({
             type: ActionType. ADDROOTLIST,
@@ -15,7 +15,7 @@ export const AddRootList = (amount: structure[]) => {
     }
 }
 
-export const DeleteRootList = (amount: DeletingState) => {
+export const deleteRootList = (amount: DeletingState) => {
     return (dispatch: Dispatch<Action>) => {
         dispatch({
             type: ActionType.DELETEROOTLIST,
@@ -24,7 +24,7 @@ export const DeleteRootList = (amount: DeletingState) => {
     }
 }
 
-export const AddList = (amount: structure[]) => {
+export const addList = (amount: structure[]) => {
     return (dispatch: Dispatch<Action>) => {
         dispatch({
             type: ActionType.ADDLIST,
@@ -33,7 +33,7 @@ export const AddList = (amount: structure[]) => {
     }
 }
 
-export const DeleteList = (amount: DeletingState) => {
+export const deleteList = (amount: DeletingState) => {
     return (dispatch: Dispatch<Action>) => {
         dispatch({
             type: ActionType.DELETELIST,
@@ -42,16 +42,7 @@ export const DeleteList = (amount: DeletingState) => {
     }
 }
 
-// export const UpdateCurrentList = (amount: IupdateCurrentList) => {
-//     return (dispatch: Dispatch<Action>) => {
-//         dispatch({
-//             type: ActionType.UPDATECURRENTLIST,
-//             payload: amount
-//         })
-//     }
-// }
-
-export const DeleteCurrentList = (amount: DeletingState) => {
+export const deleteCurrentList = (amount: DeletingState) => {
     return (dispatch: Dispatch<Action>) => {
         dispatch({
             type: ActionType.DELETECURRENTLIST,

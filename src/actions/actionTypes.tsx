@@ -3,6 +3,5 @@ export enum ActionType {
     DELETEROOTLIST = "deleteRootList",
     ADDLIST='addList',
     DELETELIST='deleteList',
-    // UPDATECURRENTLIST="updateCurrentList",
     DELETECURRENTLIST="deleteCurrentList"
 }

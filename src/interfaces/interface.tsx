@@ -18,9 +18,3 @@ export interface IupdateCurrentList {
   listToberender: structure[];
   validPath: string;
 }
-
-// export interface updateCurrentlist{
-//     function log(message): void {
-
-//     }
-// }

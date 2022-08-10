@@ -1,7 +1,6 @@
 // import { getListItemSecondaryActionClassesUtilityClass } from "@mui/material";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { structure } from "../../interfaces/interface";
 import { RootState } from "../../reducers";
 
 interface Props {
@@ -15,7 +14,10 @@ const DisplayChildName = ({
   h4Parent,
   settingLeftBarPathValue,
 }: Props) => {
+
   const list = useSelector((state: RootState) => state.list);
+  let accordianStyle={ display: "flex", marginLeft: "70px" }
+  let folderStyle={ margin: "20px", color: "#00BFFF" }
 
   let pathPresent = h4Parent + "/" + h4Name;
   const h4listTobeRendered = list.filter((singleList) => {
@@ -29,19 +31,18 @@ const DisplayChildName = ({
       {h4listTobeRendered.map((listDetails) => {
         return (
           <div>
-            <div className=" DisplayName_23_hoverAdded accordion-item ">
+            <div className=" dn_23_hoverAdded accordion-item ">
               <h3
-                style={{ display: "flex", marginLeft: "70px" }}
-                className="accordion-header"
+                className="dn23Accordian accordion-header"               
+                style={accordianStyle}
                 id="headingOne"
               >
                 <span>
-                  <i
-                    style={{ margin: "20px", color: "#00BFFF" }}
-                    className="bi bi-folder-fill"
+                  <i className="dn23Folder bi bi-folder-fill"
+                    style={folderStyle}
                   ></i>
                 </span>
-                <button
+                <button  className="dn23Btn accordion-button"
                   onClick={() => {
                     settingLeftBarPathValue(
                       listDetails.name,
@@ -49,14 +50,14 @@ const DisplayChildName = ({
                       listDetails.parent
                     );
                   }}
-                  className="accordion-button"
+
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseOne"
                   aria-expanded="true"
                   aria-controls="collapseOne"
                 >
-                  <h4 className="DisplayNameh4_23_hoverAdded">
+                  <h4 className="displayNameh4_23_hoverAdded">
                     {listDetails.name}
                   </h4>
                 </button>
